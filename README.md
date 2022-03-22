@@ -1,4 +1,4 @@
-# Altmetric Refactoring Exercise
+# Refactoring Exercise
 
 Inside this directory you'll find a Ruby program to format date ranges with
 optional start and end times.
