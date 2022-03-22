@@ -55,7 +55,7 @@ class DateRangeFormatter
 
   def format_range_for_same_month
     if no_times_given?
-      format_same_month_range_without_times
+      start_date.strftime("#{start_date.day.ordinalize} - #{end_date.day.ordinalize} %B %Y")
     else
       format_range_with_start_and_end_dates
     end
@@ -63,7 +63,7 @@ class DateRangeFormatter
 
   def format_range_for_same_year
     if no_times_given?
-      format_same_year_range_without_times
+      date_without_year(start_date) + full_date(end_date)
     else
       format_range_with_start_and_end_dates
     end
@@ -71,22 +71,10 @@ class DateRangeFormatter
 
   def format_range_for_different_year
     if no_times_given?
-      format_dates_only
+      "#{full_start_date} - #{full_end_date}"
     else
       format_range_with_start_and_end_dates
     end
-  end
-
-  def format_same_month_range_without_times
-    start_date.strftime("#{start_date.day.ordinalize} - #{end_date.day.ordinalize} %B %Y")
-  end
-
-  def format_same_year_range_without_times
-    date_without_year(start_date) + full_date(end_date)
-  end
-
-  def format_dates_only
-    "#{full_start_date} - #{full_end_date}"
   end
 
   def format_range_with_start_and_end_dates
