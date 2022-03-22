@@ -2,6 +2,8 @@ require "date"
 require "fixnum"
 
 class DateRangeFormatter
+  attr_reader :start_date, :start_time, :end_date, :end_time
+
   def initialize(start_date, end_date, start_time = nil, end_time = nil)
     @start_date = Date.parse(start_date)
     @end_date = Date.parse(end_date)
@@ -24,41 +26,28 @@ class DateRangeFormatter
   private
 
   def input_range_on_same_day?
-    @start_date == @end_date
+    start_date == end_date
   end
 
   def input_range_in_same_month?
-    @start_date.month == @end_date.month && @start_date.year == @end_date.year
+    start_date.month == end_date.month && input_range_in_same_year?
   end
 
   def input_range_in_same_year?
-    @start_date.year == @end_date.year
+    start_date.year == end_date.year
   end
 
   def no_times_given?
-    !@start_time && !@end_time
-  end
-
-  def format_same_month_range_without_times
-    @start_date.strftime("#{@start_date.day.ordinalize} - #{@end_date.day.ordinalize} %B %Y")
-  end
-
-  def format_same_year_range_without_times
-    @start_date.strftime("#{@start_date.day.ordinalize} %B - ") +
-      @end_date.strftime("#{@end_date.day.ordinalize} %B %Y")
-  end
-
-  def format_dates_only
-    "#{full_start_date} - #{full_end_date}"
+    !start_time && !end_time
   end
 
   def format_range_for_same_day
-    if @start_time && @end_time
-      "#{date_at_time(full_start_date, @start_time)} to #{@end_time}"
-    elsif @start_time
-      date_at_time(full_start_date, @start_time)
-    elsif @end_time
-      "#{full_start_date} until #{@end_time}"
+    if start_time && end_time
+      "#{date_at_time(full_start_date, start_time)} to #{end_time}"
+    elsif start_time
+      date_at_time(full_start_date, start_time)
+    elsif end_time
+      "#{full_start_date} until #{end_time}"
     else
       full_start_date
     end
@@ -88,13 +77,25 @@ class DateRangeFormatter
     end
   end
 
+  def format_same_month_range_without_times
+    start_date.strftime("#{start_date.day.ordinalize} - #{end_date.day.ordinalize} %B %Y")
+  end
+
+  def format_same_year_range_without_times
+    date_without_year(start_date) + full_date(end_date)
+  end
+
+  def format_dates_only
+    "#{full_start_date} - #{full_end_date}"
+  end
+
   def format_range_with_start_and_end_dates
-    if @start_time && @end_time
-      "#{date_at_time(full_start_date, @start_time)} - #{date_at_time(full_end_date, @end_time)}"
-    elsif @start_time
-      "#{date_at_time(full_start_date, @start_time)} - #{full_end_date}"
-    elsif @end_time
-      "#{full_start_date} - #{full_end_date} at #{@end_time}"
+    if start_time && end_time
+      "#{date_at_time(full_start_date, start_time)} - #{date_at_time(full_end_date, end_time)}"
+    elsif start_time
+      "#{date_at_time(full_start_date, start_time)} - #{full_end_date}"
+    elsif end_time
+      "#{full_start_date} - #{full_end_date} at #{end_time}"
     end
   end
 
@@ -111,6 +112,10 @@ class DateRangeFormatter
   end
 
   def full_date(date)
-    date.strftime("#{date.day.ordinalize} %B %Y") # eg: 4th November 2010
+    date.strftime("#{date.day.ordinalize} %B %Y")
+  end
+
+  def date_without_year(date)
+    date.strftime("#{date.day.ordinalize} %B - ")
   end
 end
