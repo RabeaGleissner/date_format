@@ -103,10 +103,14 @@ class DateRangeFormatter
   end
 
   def full_start_date
-    @start_date.strftime("#{@start_date.day.ordinalize} %B %Y")
+    @full_start_date ||= full_date(@start_date)
   end
 
   def full_end_date
-    @end_date.strftime("#{@end_date.day.ordinalize} %B %Y")
+    @full_end_date ||= full_date(@end_date)
+  end
+
+  def full_date(date)
+    date.strftime("#{date.day.ordinalize} %B %Y") # eg: 4th November 2010
   end
 end
