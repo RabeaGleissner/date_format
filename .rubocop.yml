@@ -10,6 +10,6 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   Enabled: false
 Metrics/BlockLength:
-  Enabled: false
+  IgnoredMethods: ['describe', 'context']
 Metrics/AbcSize:
   Enabled: false
